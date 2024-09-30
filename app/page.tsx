@@ -1,5 +1,5 @@
 import { lusitana } from "./ui/fonts";
-import { products } from "./lib/placheholer-data";
+import { products } from "./lib/placeholder-data";
 import Image from "next/image";
 
 export default function Home() {
