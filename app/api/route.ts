@@ -22,7 +22,7 @@ async function seedProducts() {
     products.map(async (product) => {
       return client.sql`
         INSERT INTO products (id, name, price, size,desc,sexo,type,img)
-        VALUES (${product.id}, ${product.name}, ${product.price}, {${product.size[0]}, ${product.size[1]}},${product.desc}, ${product.sexo}, ${product.type} ,${product.img[0]} )
+        VALUES (${product.id}, ${product.name}, ${product.price}, {${product.size[0]}},${product.desc}, ${product.sexo}, ${product.type} ,${product.img[0]} )
         ON CONFLICT (id) DO NOTHING;
       `;
     })
@@ -33,7 +33,6 @@ async function seedProducts() {
 
 export async function GET() {
   try {
-    console.log("entra aca");
     await client.sql`BEGIN`;
     await seedProducts();
     await client.sql`COMMIT`;
