@@ -1,28 +1,25 @@
+import bcrypt from "bcrypt";
 import { db } from "@vercel/postgres";
-import { products } from "../lib/placheholer-data";
-
+import {  users, products } from "../lib/placeholder-data";
 const client = await db.connect();
 
-async function seedProducts() {
+async function seedUsers() {
   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
   await client.sql`
-    CREATE TABLE IF NOT EXISTS products (
+    CREATE TABLE IF NOT EXISTS users (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
-      price INT NOT NULL UNIQUE,
-      size TEXT ARRAY NOT NULL
-      desc TEXT NOT NULL
-      sexo TEXT NOT NULL
-      type TEXT NOT NULL
-      img TEXT ARRAY NOT NULL
+      email TEXT NOT NULL UNIQUE,
+      password TEXT NOT NULL
     );
   `;
 
   const insertedUsers = await Promise.all(
-    products.map(async (product) => {
+    users.map(async (user) => {
+      const hashedPassword = await bcrypt.hash(user.password, 10);
       return client.sql`
-        INSERT INTO products (id, name, price, size,desc,sexo,type,img)
-        VALUES (${product.id}, ${product.name}, ${product.price}, {${product.size[0]}},${product.desc}, ${product.sexo}, ${product.type} ,${product.img[0]} )
+        INSERT INTO users (id, name, email, password)
+        VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword})
         ON CONFLICT (id) DO NOTHING;
       `;
     })
@@ -31,12 +28,39 @@ async function seedProducts() {
   return insertedUsers;
 }
 
+ async function seedProducts() {
+   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+
+   await client.sql`
+    CREATE TABLE IF NOT EXISTS products (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    price DECIMAL(10, 3) NOT NULL,
+    description TEXT NOT NULL,
+    sexo VARCHAR(255) NOT NULL,
+    type VARCHAR(255) NOT NULL,
+    size TEXT[] NOT NULL,
+    img TEXT[] NOT NULL
+   );
+ `;
+
+ const insertedProducts = await Promise.all(
+  products.map(async (product) => {
+    return client.sql`
+      INSERT INTO products (id, name, price, description, sexo, type, size, img)
+        VALUES (${product.id}, ${product.name}, ${product.price}, ${product.description}, ${product.sexo}, ${product.type}, ARRAY[${product.size[0]}], ARRAY[${product.img[0]}])
+      `;
+    })
+  );
+
+  return insertedProducts;
+}
+
 export async function GET() {
   try {
     await client.sql`BEGIN`;
+    await seedUsers();
     await seedProducts();
-    await client.sql`COMMIT`;
-
     return Response.json({ message: "Database seeded successfully" });
   } catch (error) {
     await client.sql`ROLLBACK`;
