@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { db } from "@vercel/postgres";
-import {  users, products } from "../lib/placeholder-data";
+import { users, products } from "../lib/placeholder-data";
 const client = await db.connect();
 
 async function seedUsers() {
@@ -28,28 +28,38 @@ async function seedUsers() {
   return insertedUsers;
 }
 
- async function seedProducts() {
-   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
+async function seedProducts() {
+  await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
 
-   await client.sql`
-    CREATE TABLE IF NOT EXISTS products (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    price DECIMAL(10, 3) NOT NULL,
-    description TEXT NOT NULL,
-    sexo VARCHAR(255) NOT NULL,
-    type VARCHAR(255) NOT NULL,
-    size TEXT[] NOT NULL,
-    img TEXT[] NOT NULL
-   );
- `;
+  await client.sql`
+      CREATE TABLE IF NOT EXISTS products (
+      id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      price DECIMAL(10, 3) NOT NULL,
+      description TEXT NOT NULL,
+      sexo VARCHAR(255) NOT NULL,
+      type VARCHAR(255) NOT NULL,
+      size TEXT[] NOT NULL,
+      img TEXT[] NOT NULL
+     );
+   `;
 
- const insertedProducts = await Promise.all(
-  products.map(async (product) => {
-    return client.sql`
+  const insertedProducts = await Promise.all(
+    products.map(async (product) => {
+      const { id, name, price, description, sexo, type, size, img } = product;
+      return client.sql`
       INSERT INTO products (id, name, price, description, sexo, type, size, img)
-        VALUES (${product.id}, ${product.name}, ${product.price}, ${product.description}, ${product.sexo}, ${product.type}, ARRAY[${product.size[0]}], ARRAY[${product.img[0]}])
-      `;
+VALUES (
+    ${id}, 
+    ${name},                     
+    ${price},                                  
+    ${description},
+    ${sexo},                                
+    ${type},                                  
+    ARRAY[${size.map((s) => s).join(",")}],              
+    ARRAY[${img.map((i) => i).join(",")}] 
+);
+    `;
     })
   );
 
@@ -61,6 +71,8 @@ export async function GET() {
     await client.sql`BEGIN`;
     await seedUsers();
     await seedProducts();
+    await client.sql`COMMIT`;
+
     return Response.json({ message: "Database seeded successfully" });
   } catch (error) {
     await client.sql`ROLLBACK`;
