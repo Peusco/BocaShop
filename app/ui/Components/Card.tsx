@@ -1,11 +1,21 @@
+"use client";
+
 import { Product } from "@/app/lib/definitions";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+
 import React from "react";
 interface Props {
   product: Product;
 }
 
 export const Card: React.FC<Props> = ({ product }) => {
+  const router = useRouter();
+
+  const handleClick = (product: Product) => {
+    router.push(`/product/${product.name}`);
+  };
+
   return (
     <div className=" flex-col h-full w-1/4 mx-4 p-1.5  hover:border-2 border-blue-800 ">
       <Image
@@ -13,7 +23,10 @@ export const Card: React.FC<Props> = ({ product }) => {
         width={400}
         height={400}
         alt={product.name}
-        className=" size-fit w-full border-2 border-slate-500"
+        className=" size-fit w-full border-0 border-slate-500 pointer-events-auto"
+        onClick={() => {
+          handleClick(product);
+        }}
       />
       <p className="text-sm text-slate-500">{product.sexo}</p>
       <h2 className=" text-xs">{product.name}</h2>

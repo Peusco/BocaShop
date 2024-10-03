@@ -9,3 +9,13 @@ export async function fetchFirstFourProducts() {
     console.log(error);
   }
 }
+
+export async function fetchProdcut(id: string) {
+  try {
+    const data =
+      await sql<Product>`SELECT * From products WHERE products.id = ${id}`;
+    return data.rows;
+  } catch (error) {
+    console.log(error);
+  }
+}

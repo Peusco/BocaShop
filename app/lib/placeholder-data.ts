@@ -23,7 +23,7 @@ const products = [
   },
   {
     id: "d6e15727-9fe1-4961-8c5b-ea44a9bd81ab",
-    name: "Short Alternativo Authentic Boca Jrs 24/25",
+    name: "Short Alternativo Authentic Boca Jrs 24-25",
     price: 74.999,
     description:
       "Entrená como un profesional con el nuevo Short Alternativo 24/25 de Boca Jrs. Short alternativo de Boca Juniors.  ",
@@ -34,7 +34,7 @@ const products = [
   },
   {
     id: "d6e15727-9fe1-4961-8c5b-ea44a9bd81ac",
-    name: "Camiseta Alternativa Boca Jrs 24/25",
+    name: "Camiseta Alternativa Boca Jrs 24-25",
     price: 89.999,
     description:
       "Lucí la nueva Camiseta Alternativa 24/25 del Xeneize. El diseño de la nueva camiseta alternativa está inspirado en las banderas exhibidas por los hinchas en La Bombonera. ",
@@ -45,7 +45,7 @@ const products = [
   },
   {
     id: "d6e15727-9fe1-4961-8c5b-ea44a9bd81ad",
-    name: "Medias Alternativas Boca Jrs 24/25",
+    name: "Medias Alternativas Boca Jrs 24-25",
     price: 11.999,
     description:
       "Lucí las nuevas medias de fútbol alternativas del Xeneize. Demostrá tus habilidades, completá tu uniforme con las medias alternativas. ",
@@ -56,7 +56,7 @@ const products = [
   },
   {
     id: "d6e15727-9fe1-4961-8c5b-ea44a9bd81ae",
-    name: "Short Alternativo Authentic Boca Jrs 24/25",
+    name: "Short Alternativo Authentic Boca Jrs 24-25",
     price: 74.999,
     description:
       "Entrená como un profesional con el nuevo Short Alternativo 24/25 de Boca Jrs. Short alternativo de Boca Juniors.",
@@ -81,7 +81,7 @@ const products = [
   },
   {
     id: "5f96bda1-58c1-4f78-b9f3-3f9fabc6f3e5",
-    name: "Camiseta Básquet Titular Boca Jrs 24/25",
+    name: "Camiseta Básquet Titular Boca Jrs 24-25",
     price: 68.999,
     description:
       "Zapatillas de básquet con tecnología de amortiguación para mayor comodidad en la cancha.",
@@ -114,7 +114,7 @@ const products = [
   }, // Fútbol
   {
     id: "2a60c1d2-33d5-4b2d-b9e5-5e1e4a637f1f",
-    name: "Camiseta Arquero 23/24",
+    name: "Camiseta Arquero 23-24",
     price: 79.999,
     description:
       "Diseñada para los hinchas, ofrece comodidad en todo momento gracias a su tejido suave con tecnología de absorción AEROREADY.",
@@ -125,7 +125,7 @@ const products = [
   },
   {
     id: "3d3f2a2e-b1b5-4ebc-9f7c-fd79b3d2eb93",
-    name: "Medias Uniforme Titular Boca Jrs 24/25",
+    name: "Medias Uniforme Titular Boca Jrs 24-25",
     price: 11.99,
     description:
       "Medias para el campo de fútbol. Cuando llega el momento de mostrar tus habilidades, completá tu uniforme con estas medias de fútbol.",
@@ -136,7 +136,7 @@ const products = [
   },
   {
     id: "e8f81c1f-ef48-455b-aeb3-00a8d8d4f295",
-    name: "Camiseta Titular Boca Jrs 24/25",
+    name: "Camiseta Titular Boca Jrs 24-25",
     price: 99.99,
     description:
       "La nueva camiseta oficial irradia la pasión boquense y la conexión con el barrio. Inspirada en el tren cuyo recorrido bordea La Bombonera.",
@@ -147,7 +147,7 @@ const products = [
   },
   {
     id: "f1c15dcb-57e8-4e02-b25e-1b8899e5cfcf",
-    name: "Camiseta Titular Boca Jrs 23/24",
+    name: "Camiseta Titular Boca Jrs 23-24",
     price: 89.99,
     description:
       "Esta nueva camiseta titular de Boca Juniors adidas une la pasión y el barrio con diferentes tonos que logran un efecto visual y una prominente franja central que resaltan sus colores, el azul y oro.",
@@ -160,7 +160,7 @@ const products = [
   // Básquet
   {
     id: "b0a3b0a8-1c32-4875-bd1d-75618c69ef49",
-    name: "Short Básquet Titular Boca Jrs 24/25",
+    name: "Short Básquet Titular Boca Jrs 24-25",
     price: 69.999,
     description:
       "horts de básquet para hinchas de Boca Juniors con los colores del uniforme titular, hechos con materiales reciclados Estos shorts de básquet de Boca Juniors adidas son los que usan los jugadores cuando juegan en La Bombonerita",
@@ -171,7 +171,7 @@ const products = [
   },
   {
     id: "6aeb1e62-5e6b-4d6c-84db-5caa0e839c98",
-    name: "Short Alternativo Basquet Boca Jrs 23/24",
+    name: "Short Alternativo Basquet Boca Jrs 23-24",
     price: 59.999,
     description:
       "Jugá con estilo con estos shorts del conjunto suplente de básquet. El escudo CABJ se inspira en los uniformes de los años 80 para un look retro.",
@@ -182,7 +182,7 @@ const products = [
   },
   {
     id: "8b4a5de7-2b70-4eb0-b5b1-b3e104eab5c0",
-    name: "Camiseta Alternativa Basquet Boca Jrs 23/24",
+    name: "Camiseta Alternativa Basquet Boca Jrs 23-24",
     price: 59.999,
     description:
       "Mostrá tu pasión por Boca Juniors con la remera titular de básquet adidas.",
@@ -195,7 +195,7 @@ const products = [
   // Entrenamiento
   {
     id: "a1f3fcdc-2e4f-44b0-bf79-f2fda3e4f9c7",
-    name: "Pantalón de Entrenamiento 24/25",
+    name: "Pantalón de Entrenamiento 24-25",
     price: 119.999,
     description:
       "Pantalón deportivo suave creado para entrenamientos intensos. Lucí todo el estilo de La Bombonera al entrenar",
@@ -206,7 +206,7 @@ const products = [
   },
   {
     id: "50d7a7af-849f-4f34-babe-24c5cce4a30f",
-    name: "Pantalón Entrenamiento Tiro Boca Jrs 23/24",
+    name: "Pantalón Entrenamiento Tiro Boca Jrs 23-24",
     price: 119.999,
     description:
       "Rendí al máximo con este pantalón de entrenamiento de fútbol que elimina el sudor de manera efectiva. Su diseño facilita cada movimiento, haciendo que tu entrenamiento sea más llevadero y exitoso",
@@ -217,7 +217,7 @@ const products = [
   },
   {
     id: "d6c04a0b-53ea-4c2c-b1b2-793e6c828e31",
-    name: "Pantalón de Entrenamiento Pro 24/25",
+    name: "Pantalón de Entrenamiento Pro 24-25",
     price: 129.999,
     description:
       "Un pantalón de entrenamiento absorbente de Boca Juniors hecho con materiales reciclados. Solo lo mejor para vos. Parte de la ropa de entrenamiento de Boca Juniors",
@@ -228,7 +228,7 @@ const products = [
   },
   {
     id: "d25c7d62-21db-4290-bc0d-59c3dc97bfb7",
-    name: "Pantalón Tiro Boca Jrs 23/24",
+    name: "Pantalón Tiro Boca Jrs 23-24",
     price: 99.999,
     description:
       "El pasado se desvanece, pero la actitud de los jugadores de Boca Juniors perdura en cada entrenamiento. adidas ha creado este conjunto ultracómodo, con un pantalón de fútbol para niños inspirado en el equipo",
