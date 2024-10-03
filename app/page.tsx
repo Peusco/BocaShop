@@ -8,7 +8,7 @@ export default async function Home() {
   const data = await fetchFirstFourProducts();
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full   ">
       <div className="  text-start  p-10 flex">
         <h1
           className={`${lusitana} text-2xl text-blue-800 border-b-4 border-l-2 border-y-blue-600 border-l-blue-400`}
@@ -16,7 +16,7 @@ export default async function Home() {
           Productos <span className="text-4xl text-white">Destacados</span>
         </h1>
       </div>
-      <section className=" flex  gap-10">
+      <section className=" md:flex ">
         {data &&
           data.map((product: Product) => {
             return <Card product={product} key={product.id} />;
