@@ -3,7 +3,7 @@ export type Product = {
   name: string;
   price: number;
   size: string[];
-  desc: string;
+  description: string;
   sexo: "Hombre" | "Mujer" | "Niños" | "Unisex";
   type: "Futbol" | "Basquet" | "Entrenamiento" | "Tiempo libre" | "Accesorios";
   img: string[];

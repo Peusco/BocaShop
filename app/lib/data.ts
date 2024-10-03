@@ -10,10 +10,10 @@ export async function fetchFirstFourProducts() {
   }
 }
 
-export async function fetchProdcut(id: string) {
+export async function fetchProduct(id: string) {
   try {
     const data =
-      await sql<Product>`SELECT * From products WHERE products.id = ${id}`;
+      await sql<Product>`SELECT * From products p WHERE p.id = ${id}`;
     return data.rows;
   } catch (error) {
     console.log(error);

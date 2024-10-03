@@ -13,7 +13,7 @@ export const Card: React.FC<Props> = ({ product }) => {
   const router = useRouter();
 
   const handleClick = (product: Product) => {
-    router.push(`/product/${product.name}`);
+    router.push(`/product/${product.id}`);
   };
 
   return (
