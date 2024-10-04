@@ -17,22 +17,24 @@ export const Card: React.FC<Props> = ({ product }) => {
   };
 
   return (
-    <div className=" flex-col h-full w-1/4 mx-4 p-1.5  hover:border-2 border-blue-800 ">
+    <div className=" flex-col h-1/2 w-1/2 p-1.5  hover:border-2 border-blue-800 mx-auto md:flex  md:justify-between md:w-2/5  ">
       <Image
         src={product.img[0]}
-        width={400}
-        height={400}
+        width={250}
+        height={250}
         alt={product.name}
-        className=" size-fit w-full border-0 border-slate-500 pointer-events-auto"
+        className=" size-fit w-full border-0 border-slate-500 pointer-events-auto md:w-4/5 md:h-full  md:m-auto"
         onClick={() => {
           handleClick(product);
         }}
       />
-      <p className="text-sm text-slate-500">{product.sexo}</p>
-      <h2 className=" text-xs">{product.name}</h2>
-      <h2 className="px-4 py-2 text-blue-900 font-bold">${product.price}</h2>
+      <p className="text-sm md:text-base text-slate-500 ">{product.sexo}</p>
+      <h2 className=" text-xs md:text-xl">{product.name}</h2>
+      <h2 className="px-4 py-2 text-blue-900 font-bold md:text-xl">
+        ${product.price}
+      </h2>
       <div className=" text-center">
-        <button className="bg-blue-600 w-32 rounded-xl text-white">
+        <button className="bg-blue-600 w-32 rounded-xl text-white md:text-2xl">
           Comprar
         </button>
       </div>

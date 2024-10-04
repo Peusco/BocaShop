@@ -9,7 +9,7 @@ export default async function SpecificProductPage({
   const data = await fetchProduct(params.id);
 
   return (
-    <section className=" h-full">
+    <section className=" h-screen">
       <div className="h-full">
         {data ? (
           <SpecificProduct product={data[0]} />

@@ -16,7 +16,7 @@ export default async function Home() {
           Productos <span className="text-4xl text-white">Destacados</span>
         </h1>
       </div>
-      <section className=" md:flex ">
+      <section className=" md:flex  md:justify-evenly">
         {data &&
           data.map((product: Product) => {
             return <Card product={product} key={product.id} />;
