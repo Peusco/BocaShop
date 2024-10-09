@@ -1,15 +1,21 @@
 "use client";
 
 import Image from "next/image";
-import { CartIcon, SearchIcon, UserIcon } from "./icons";
+import { CartIcon, CrossIcon, SearchIcon, UserIcon } from "./icons";
 import Link from "next/link";
 import { useState } from "react";
 
 export function Header() {
   const [isOpen, setIsOpen] = useState(false);
+  const [loginIsOpen, setLoginIsOpen] = useState(false);
 
   const handleMenu = () => {
     setIsOpen(!isOpen);
+    setLoginIsOpen(false);
+  };
+
+  const handleIniciarSesion = () => {
+    setLoginIsOpen(!loginIsOpen);
   };
 
   return (
@@ -20,15 +26,20 @@ export function Header() {
           width={80}
           height={80}
           alt="Boca Logo"
-          className="mx-4"
+          className="mx-4 w-auto h-auto"
         />
       </Link>
       <div className="hidden md:block">
         <input type="text" className=" h-8 mx-2 rounded-lg " />
         <button>Search</button>
       </div>
-      <div className="hidden md:block text-white">
-        <CartIcon />
+      <div className="hidden text-white md:flex md:gap-4">
+        <Link href={"/"}>
+          <CartIcon />
+        </Link>
+        <div onClick={handleIniciarSesion}>
+          <UserIcon />
+        </div>
       </div>
 
       <button
@@ -60,22 +71,56 @@ export function Header() {
           isOpen ? "block" : "hidden"
         }`}
       >
-        <a href="" className="m-auto text-white flex-col gap-2">
-          Buscar
-          <SearchIcon />
-        </a>
-        <a
-          href=""
-          className="m-auto text-white flex-col  gap-2"
+        <Link
+          href={"/products"}
+          className="m-auto text-white flex-col gap-2"
           onClick={handleMenu}
         >
+          Buscar
+          <SearchIcon />
+        </Link>
+        <a href="" className="m-auto text-white flex-col  gap-2">
           Cart
           <CartIcon />
         </a>
-        <a href="" className="m-auto text-white flex-col gap-2">
+        <div
+          className="m-auto text-white flex-col flex  items-center"
+          onClick={handleIniciarSesion}
+        >
           Iniciar Sesion
           <UserIcon />
-        </a>
+        </div>
+      </div>
+
+      <div
+        className={`${
+          loginIsOpen ? "block" : "hidden"
+        } absolute bg-slate-200 rounded-md w-52 h-64 right-0 top-40 md:top-20`}
+      >
+        <div className="flex justify-between mx-4 my-1">
+          <h1 className="text-lg font-medium">Iniciar Sesion</h1>
+          <div onClick={handleIniciarSesion}>
+            <CrossIcon />
+          </div>
+        </div>
+        <form className="text-center py-4 ">
+          <label htmlFor="email" className="text-lg  font-medium text-zinc-600">
+            Mail
+          </label>
+          <input type="text" name="email" className="my-2 bg-slate-400" />
+          <label
+            htmlFor="contraseña"
+            className="text-lg text-zinc-600 font-medium"
+          >
+            Contraseña
+          </label>
+          <input type="text" name="contraseña" className="bg-slate-400 my-2" />
+        </form>
+        <div className="text-center border-t-2 border-white">
+          <button className="bg-yellow-300 rounded-md w-20 h-7 my-2">
+            Ingresar
+          </button>
+        </div>
       </div>
     </div>
   );

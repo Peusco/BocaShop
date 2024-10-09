@@ -8,3 +8,11 @@ export type Product = {
   type: "Futbol" | "Basquet" | "Entrenamiento" | "Tiempo libre" | "Accesorios";
   img: string[];
 };
+
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  rol: "admin" | "user";
+  products_id: string[];
+};

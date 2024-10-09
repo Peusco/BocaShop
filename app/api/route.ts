@@ -6,22 +6,51 @@ const client = await db.connect();
 async function seedUsers() {
   await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
   await client.sql`
-    CREATE TABLE IF NOT EXISTS users (
+     CREATE TABLE IF NOT EXISTS users (
       id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       name VARCHAR(255) NOT NULL,
       email TEXT NOT NULL UNIQUE,
-      password TEXT NOT NULL
+      password TEXT NOT NULL,
+      rol VARCHAR(255) NOT NULL
     );
   `;
+
+  await client.sql`
+  CREATE TABLE IF NOT EXISTS user_products (
+  user_id UUID NOT NULL,
+  product_id UUID NOT NULL,
+  PRIMARY KEY (user_id, product_id),
+  CONSTRAINT fk_user
+    FOREIGN KEY(user_id) 
+    REFERENCES users(id)
+    ON DELETE CASCADE,
+  CONSTRAINT fk_product
+    FOREIGN KEY(product_id) 
+    REFERENCES products(id)
+    ON DELETE CASCADE
+);
+`;
 
   const insertedUsers = await Promise.all(
     users.map(async (user) => {
       const hashedPassword = await bcrypt.hash(user.password, 10);
-      return client.sql`
-        INSERT INTO users (id, name, email, password)
-        VALUES (${user.id}, ${user.name}, ${user.email}, ${hashedPassword})
+      const { id, name, email, rol } = user;
+
+      await client.sql`
+        INSERT INTO users (id, name, email, password,rol)
+        VALUES (${id}, ${name}, ${email}, ${hashedPassword}, ${rol})
         ON CONFLICT (id) DO NOTHING;
       `;
+
+      await Promise.all(
+        user.products_id.map(async (productId) => {
+          return client.sql`
+            INSERT INTO user_products (user_id, product_id)
+            VALUES (${id}, ${productId})  -- Asegúrate de usar el id del usuario insertado
+            ON CONFLICT (user_id, product_id) DO NOTHING;
+          `;
+        })
+      );
     })
   );
 
@@ -69,8 +98,8 @@ VALUES (
 export async function GET() {
   try {
     await client.sql`BEGIN`;
-    await seedUsers();
     await seedProducts();
+    await seedUsers();
     await client.sql`COMMIT`;
 
     return Response.json({ message: "Database seeded successfully" });

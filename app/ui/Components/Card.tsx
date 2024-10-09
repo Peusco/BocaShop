@@ -11,15 +11,16 @@ interface Props {
 
 export const Card: React.FC<Props> = ({ product }) => {
   const router = useRouter();
+  const src = product.img[0].split(",");
 
   const handleClick = (product: Product) => {
-    router.push(`/product/${product.id}`);
+    router.push(`/products/${product.id}`);
   };
 
   return (
     <div className=" flex-col h-1/2 w-1/2 p-1.5  hover:border-2 border-blue-800 mx-auto md:flex  md:justify-between md:w-2/5  ">
       <Image
-        src={product.img[0]}
+        src={src[0]}
         width={250}
         height={250}
         alt={product.name}

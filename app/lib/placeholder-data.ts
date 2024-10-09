@@ -1,13 +1,5 @@
 // This file contains placeholder data that you'll be replacing with real data in the Data Fetching chapter:
 // https://nextjs.org/learn/dashboard-app/fetching-data
-const users = [
-  {
-    id: "410544b2-4001-4271-9855-fec4b6a6442a",
-    name: "User",
-    email: "user@nextmail.com",
-    password: "123456",
-  },
-];
 
 const products = [
   {
@@ -213,7 +205,7 @@ const products = [
     sexo: "Mujer",
     type: "Entrenamiento",
     size: ["2XS", "XS", "S", "M", "L", "XL"],
-    img: ["/Pantalón Entrenamiento Tiro Boca Jrs.png"],
+    img: ["/Pantalón Entrenamiento Tiro Boca Jrs mujer.png"],
   },
   {
     id: "d6c04a0b-53ea-4c2c-b1b2-793e6c828e31",
@@ -224,7 +216,7 @@ const products = [
     sexo: "Hombre",
     type: "Entrenamiento",
     size: ["XS", "S", "M", "L", "XL", "2XL"],
-    img: ["/Pantalón de Entrenamiento Pro.png"],
+    img: ["/Pantalón de Entrenamiento Pro hombre.png"],
   },
   {
     id: "d25c7d62-21db-4290-bc0d-59c3dc97bfb7",
@@ -337,6 +329,17 @@ const products = [
     type: "Accesorios",
     size: ["Talla Única"],
     img: ["/Combo tabla + cuchillo Boca Jrs.webp"],
+  },
+];
+
+const users = [
+  {
+    id: "410544b2-4001-4271-9855-fec4b6a6442a",
+    name: "admin",
+    email: "peusco@hotmail.com",
+    password: "admin",
+    rol: "admin",
+    products_id: [products[0].id],
   },
 ];
 
