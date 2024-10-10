@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { CartIcon, CrossIcon, SearchIcon, UserIcon, ShopIcon } from "./icons";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Search from "./Components/search";
 import { usePathname } from "next/navigation";
 
@@ -46,7 +46,9 @@ export function Header() {
       <div className="hidden md:block">
         {searchIsOpen ? (
           <div>
-            <Search />
+            <Suspense>
+              <Search />
+            </Suspense>
           </div>
         ) : (
           <Link href={"/products"} onClick={handleSearch}>
