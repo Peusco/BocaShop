@@ -1,3 +1,4 @@
+import { useProductContext } from "@/app/context";
 import {
   fetchFilteredNameProducts,
   fetchFilteredSexoProducts,
@@ -6,21 +7,21 @@ import {
 import { Product } from "@/app/lib/definitions";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { SearchIcon } from "../icons";
 
-export default function Search({
-  handleProducts,
-}: {
-  handleProducts: (products: Product[]) => void;
-}) {
+export default function Search() {
+  const { setData } = useProductContext();
   const searchParams = useSearchParams();
   const pathname = usePathname();
+
+  const query = searchParams.get("query")?.toString();
+  const search = searchParams.get("search")?.toString();
+
   const { replace } = useRouter();
   const [typeOfSearch, setTypeOfSearch] = useState(
-    searchParams.get("search")?.toString() == undefined
-      ? "name"
-      : searchParams.get("search")?.toString()
+    search == undefined ? "name" : search
   );
-  const [type, setType] = useState("");
+  const [type, setType] = useState(query == undefined ? "" : query);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -36,7 +37,7 @@ export default function Search({
     }
 
     if (products != undefined) {
-      handleProducts(products);
+      setData(products);
     }
   };
 
@@ -44,6 +45,7 @@ export default function Search({
     const params = new URLSearchParams(searchParams);
     if (term) {
       params.set("search", term);
+      params.delete("query");
     } else {
       params.delete("search");
     }
@@ -65,26 +67,19 @@ export default function Search({
   };
 
   return (
-    <div className="md:flex md:h-14">
-      <div className="flex justify-center py-4 gap-2 w-full">
-        <label
-          htmlFor="typeOfSearch"
-          className="px-2 text-white text-lg font-medium md:w-1/2 md:text-end"
-        >
-          Buscar Producto por:
-        </label>
-        <select
-          name="typeOfSearch"
-          id="typeOfSearch"
-          onChange={(e) => handleChangeTypeOfSearch(e.target.value)}
-          className="text-center bg-blue-700 text-yellow-400 rounded-sm"
-          defaultValue={searchParams.get("search")?.toString()}
-        >
-          <option value={"name"}>Nombre</option>
-          <option value={"tipo"}>Tipo</option>
-          <option value={"sexo"}>Sexo</option>
-        </select>
-      </div>
+    <div className="flex md:h-14">
+      <select
+        name="typeOfSearch"
+        id="typeOfSearch"
+        onChange={(e) => handleChangeTypeOfSearch(e.target.value)}
+        className="text-center h-1/2 m-auto bg-blue-700 text-yellow-400 rounded-sm"
+        defaultValue={search}
+      >
+        <option value={"name"}>Nombre</option>
+        <option value={"tipo"}>Tipo</option>
+        <option value={"sexo"}>Sexo</option>
+      </select>
+
       <form
         className="flex justify-center gap-4 p-3 w-full"
         onSubmit={(e) => handleSubmit(e)}
@@ -93,20 +88,20 @@ export default function Search({
           <input
             type="text"
             name="name"
-            className="w-1/2 rounded-md bg-blue-700 text-yellow-400"
+            className="w-1/2 rounded-md bg-blue-700 text-yellow-400 md:w-full text-center"
             onChange={(e) => handleChangeType(e.target.value)}
-            defaultValue={searchParams.get("query")?.toString()}
+            value={type}
           />
         ) : typeOfSearch == "tipo" ? (
           <select
-            className="text-center w-1/2 md:w-1/5 bg-blue-700 text-yellow-400"
+            className="text-center w-1/2  bg-blue-700 text-yellow-400 md:w-full"
             name="tipo"
             onChange={(e) => {
               handleChangeType(e.target.value);
             }}
-            defaultValue={searchParams.get("query")?.toString()}
+            defaultValue={type}
           >
-            <option value={""}>Seleccione Una Opcion</option>
+            <option value={""}>--- Tipo ---</option>
             <option value={"Futbol"}>Futbol</option>
             <option value={"Básquet"}>Basquet</option>
             <option value={"entrenamiento"}>Entrenamiento</option>
@@ -115,14 +110,14 @@ export default function Search({
           </select>
         ) : (
           <select
-            className="text-center w-1/2 bg-blue-700 text-yellow-400"
+            className="text-center w-1/2 bg-blue-700 text-yellow-400 md:w-full"
             name="sexo"
             onChange={(e) => {
               handleChangeType(e.target.value);
             }}
-            defaultValue={searchParams.get("query")?.toString()}
+            defaultValue={type}
           >
-            <option value={""}>Seleccione Una Opcion</option>
+            <option value={""}>--- Sexo ---</option>
             <option value={"Hombre"}>Hombre</option>
             <option value={"Mujer"}>Mujer</option>
             <option value={"Niños"}>Niños</option>
@@ -132,9 +127,9 @@ export default function Search({
 
         <button
           type="submit"
-          className="w-1/2 bg-blue-600 rounded-md text-white md:w-1/5"
+          className="w-1/2 bg-blue-600 rounded-md text-white md:w-1/5 text-center"
         >
-          Buscar
+          <SearchIcon />
         </button>
       </form>
     </div>

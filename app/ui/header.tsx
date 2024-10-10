@@ -1,13 +1,19 @@
 "use client";
 
 import Image from "next/image";
-import { CartIcon, CrossIcon, SearchIcon, UserIcon } from "./icons";
+import { CartIcon, CrossIcon, SearchIcon, UserIcon, ShopIcon } from "./icons";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Search from "./Components/search";
+import { usePathname } from "next/navigation";
 
 export function Header() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [loginIsOpen, setLoginIsOpen] = useState(false);
+  const [searchIsOpen, setSearchIsOpen] = useState(
+    pathname.split("/")[1] == "products" ? true : false
+  );
 
   const handleMenu = () => {
     setIsOpen(!isOpen);
@@ -17,6 +23,14 @@ export function Header() {
   const handleIniciarSesion = () => {
     setLoginIsOpen(!loginIsOpen);
   };
+
+  const handleSearch = () => {
+    setSearchIsOpen(!searchIsOpen);
+  };
+
+  useEffect(() => {
+    setSearchIsOpen(pathname.split("/")[1] == "products" ? true : false);
+  }, [pathname]);
 
   return (
     <div className={`h-20 flex justify-between items-center p-2  bg-blue-800 `}>
@@ -30,8 +44,15 @@ export function Header() {
         />
       </Link>
       <div className="hidden md:block">
-        <input type="text" className=" h-8 mx-2 rounded-lg " />
-        <button>Search</button>
+        {searchIsOpen ? (
+          <div>
+            <Search />
+          </div>
+        ) : (
+          <Link href={"/products"} onClick={handleSearch}>
+            <ShopIcon />
+          </Link>
+        )}
       </div>
       <div className="hidden text-white md:flex md:gap-4">
         <Link href={"/"}>
