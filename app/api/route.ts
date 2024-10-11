@@ -46,7 +46,7 @@ async function seedUsers() {
         user.products_id.map(async (productId) => {
           return client.sql`
             INSERT INTO user_products (user_id, product_id)
-            VALUES (${id}, ${productId})  -- Asegúrate de usar el id del usuario insertado
+            VALUES (${id}, ${productId})  
             ON CONFLICT (user_id, product_id) DO NOTHING;
           `;
         })
@@ -69,15 +69,17 @@ async function seedProducts() {
       sexo VARCHAR(255) NOT NULL,
       type VARCHAR(255) NOT NULL,
       size TEXT[] NOT NULL,
-      img TEXT[] NOT NULL
+      img TEXT[] NOT NULL,
+      quantity INTEGER NOT NULL
      );
    `;
 
   const insertedProducts = await Promise.all(
     products.map(async (product) => {
-      const { id, name, price, description, sexo, type, size, img } = product;
+      const { id, name, price, description, sexo, type, size, img, quantity } =
+        product;
       return client.sql`
-      INSERT INTO products (id, name, price, description, sexo, type, size, img)
+      INSERT INTO products (id, name, price, description, sexo, type, size, img, quantity)
 VALUES (
     ${id}, 
     ${name},                     
@@ -86,7 +88,8 @@ VALUES (
     ${sexo},                                
     ${type},                                  
     ARRAY[${size.map((s) => s).join(",")}],              
-    ARRAY[${img.map((i) => i).join(",")}] 
+    ARRAY[${img.map((i) => i).join(",")}] ,
+    ${quantity}
 );
     `;
     })

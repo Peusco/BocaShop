@@ -6,6 +6,8 @@ import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import Search from "./Components/search";
 import { usePathname } from "next/navigation";
+import { useCartContext } from "../context/cartContext";
+import { Product } from "../lib/definitions";
 
 export function Header() {
   const pathname = usePathname();
@@ -14,6 +16,9 @@ export function Header() {
   const [searchIsOpen, setSearchIsOpen] = useState(
     pathname.split("/")[1] == "products" ? true : false
   );
+  const [shopIsOpen, setShopIsOpen] = useState(false);
+
+  const { dataCart } = useCartContext();
 
   const handleMenu = () => {
     setIsOpen(!isOpen);
@@ -57,9 +62,9 @@ export function Header() {
         )}
       </div>
       <div className="hidden text-white md:flex md:gap-4">
-        <Link href={"/"}>
+        <button onClick={() => setShopIsOpen(!shopIsOpen)}>
           <CartIcon />
-        </Link>
+        </button>
         <div onClick={handleIniciarSesion}>
           <UserIcon />
         </div>
@@ -102,10 +107,13 @@ export function Header() {
           Buscar
           <SearchIcon />
         </Link>
-        <a href="" className="m-auto text-white flex-col  gap-2">
+        <div
+          className="m-auto text-white flex-col flex items-center "
+          onClick={() => setShopIsOpen(!shopIsOpen)}
+        >
           Cart
           <CartIcon />
-        </a>
+        </div>
         <div
           className="m-auto text-white flex-col flex  items-center"
           onClick={handleIniciarSesion}
@@ -144,6 +152,43 @@ export function Header() {
             Ingresar
           </button>
         </div>
+      </div>
+
+      <div
+        className={`${
+          shopIsOpen ? "block" : "hidden"
+        } absolute bg-slate-200 rounded-md w-72 h-32 right-0 top-40 md:top-20 md:w-96 flex`}
+      >
+        {dataCart.map((product: Product) => {
+          const src = product.img[0].split(",");
+          return (
+            <div key={product.id} className="flex">
+              <div className="flex w-full justify-around ">
+                <div className="w-1/3 h-full">
+                  <Image
+                    src={product.img[0]}
+                    width={80}
+                    height={80}
+                    alt="camistea de boca"
+                    className="m-auto py-4"
+                  />
+                </div>
+                <div className="flex-col">
+                  <h1>{product.name}</h1>
+                  <div className="flex py-4">
+                    <div className="flex ">
+                      <button>-</button>
+                      <h2>{product.quantity}</h2>
+                      <button>+</button>
+                    </div>
+                    <h2>${product.price}</h2>
+                  </div>
+                </div>
+              </div>
+              <h1 className=" self-center mx-2">X</h1>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

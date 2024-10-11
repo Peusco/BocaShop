@@ -1,5 +1,6 @@
 "use client";
 
+import { useCartContext } from "@/app/context/cartContext";
 import { Product } from "@/app/lib/definitions";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export const Card: React.FC<Props> = ({ product }) => {
+  const { addToCart } = useCartContext();
   const router = useRouter();
   const src = product.img[0].split(",");
 
@@ -35,7 +37,10 @@ export const Card: React.FC<Props> = ({ product }) => {
         ${product.price}
       </h2>
       <div className=" text-center">
-        <button className="bg-blue-600 w-32 rounded-xl text-white md:text-2xl">
+        <button
+          className="bg-blue-600 w-32 rounded-xl text-white md:text-2xl"
+          onClick={() => addToCart(product)}
+        >
           Comprar
         </button>
       </div>

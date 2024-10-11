@@ -7,6 +7,7 @@ export type Product = {
   sexo: "Hombre" | "Mujer" | "Niños" | "Unisex";
   type: "Futbol" | "Basquet" | "Entrenamiento" | "Tiempo libre" | "Accesorios";
   img: string[];
+  quantity: number;
 };
 
 export type User = {

@@ -7,19 +7,19 @@ interface ProductContextType {
   setData: React.Dispatch<React.SetStateAction<Product[]>>;
 }
 
-const ProcuctContext = createContext<ProductContextType | undefined>(undefined);
+const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
 export function ProductWrapper({ children }: { children: React.ReactNode }) {
   const [data, setData] = useState<Product[]>([]);
   return (
-    <ProcuctContext.Provider value={{ data, setData }}>
+    <ProductContext.Provider value={{ data, setData }}>
       {children}
-    </ProcuctContext.Provider>
+    </ProductContext.Provider>
   );
 }
 
 export function useProductContext() {
-  const context = useContext(ProcuctContext);
+  const context = useContext(ProductContext);
   if (!context) {
     throw new Error("useProductContext must be used within a ProductWrapper");
   }
