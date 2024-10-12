@@ -1,7 +1,16 @@
 "use client";
 
 import Image from "next/image";
-import { CartIcon, CrossIcon, SearchIcon, UserIcon, ShopIcon } from "./icons";
+import {
+  CartIcon,
+  CrossIcon,
+  SearchIcon,
+  UserIcon,
+  ShopIcon,
+  TrashIcon,
+  MinusIcon,
+  PlusIcon,
+} from "./icons";
 import Link from "next/link";
 import { Suspense, useEffect, useState } from "react";
 import Search from "./Components/search";
@@ -16,9 +25,15 @@ export function Header() {
   const [searchIsOpen, setSearchIsOpen] = useState(
     pathname.split("/")[1] == "products" ? true : false
   );
-  const [shopIsOpen, setShopIsOpen] = useState(false);
+  const [cartIsOpen, setCartIsOpen] = useState(false);
 
-  const { dataCart } = useCartContext();
+  const { dataCart, removeFromCart, restQuantity, addToCart } =
+    useCartContext();
+
+  const handleCart = () => {
+    console.log("hola");
+    setCartIsOpen(!cartIsOpen);
+  };
 
   const handleMenu = () => {
     setIsOpen(!isOpen);
@@ -62,7 +77,7 @@ export function Header() {
         )}
       </div>
       <div className="hidden text-white md:flex md:gap-4">
-        <button onClick={() => setShopIsOpen(!shopIsOpen)}>
+        <button onClick={handleCart}>
           <CartIcon />
         </button>
         <div onClick={handleIniciarSesion}>
@@ -95,7 +110,7 @@ export function Header() {
       </button>
 
       <div
-        className={`bg-blue-800 absolute w-full right-0 top-20 h-20  bg-opacity-65 flex justify-between  ${
+        className={`bg-blue-800 absolute w-full right-0 top-20 h-20  bg-opacity-65 flex justify-between md:hidden  ${
           isOpen ? "block" : "hidden"
         }`}
       >
@@ -109,7 +124,7 @@ export function Header() {
         </Link>
         <div
           className="m-auto text-white flex-col flex items-center "
-          onClick={() => setShopIsOpen(!shopIsOpen)}
+          onClick={handleCart}
         >
           Cart
           <CartIcon />
@@ -155,40 +170,75 @@ export function Header() {
       </div>
 
       <div
-        className={`${
-          shopIsOpen ? "block" : "hidden"
-        } absolute bg-slate-200 rounded-md w-72 h-32 right-0 top-40 md:top-20 md:w-96 flex`}
+        className={`${cartIsOpen ? "block" : "hidden"} ${
+          dataCart.length == 0 ? "h-28 " : "h-auto"
+        } ${
+          isOpen ? "top-40" : "top-20"
+        } absolute bg-blue-800 rounded-md w-72 right-0  md:top-20 md:w-96 flex-col`}
       >
-        {dataCart.map((product: Product) => {
-          const src = product.img[0].split(",");
-          return (
-            <div key={product.id} className="flex">
-              <div className="flex w-full justify-around ">
-                <div className="w-1/3 h-full">
-                  <Image
-                    src={product.img[0]}
-                    width={80}
-                    height={80}
-                    alt="camistea de boca"
-                    className="m-auto py-4"
-                  />
-                </div>
-                <div className="flex-col">
-                  <h1>{product.name}</h1>
-                  <div className="flex py-4">
-                    <div className="flex ">
-                      <button>-</button>
-                      <h2>{product.quantity}</h2>
-                      <button>+</button>
+        <div className=" float-end text-white md:hidden" onClick={handleCart}>
+          <CrossIcon />
+        </div>
+        {dataCart.length > 0 ? (
+          dataCart.map((product: Product) => {
+            return (
+              <div
+                key={product.id}
+                className="flex py-2  border-t-2 border-t-yellow-400 my-1"
+              >
+                <div className="flex w-full justify-around ">
+                  <div className="w-1/3 h-full">
+                    <Image
+                      src={product.img[0]}
+                      width={80}
+                      height={80}
+                      alt="camistea de boca"
+                      className="m-auto py-4"
+                    />
+                  </div>
+                  <div className="flex-col">
+                    <h1 className="text-white font-medium">{product.name}</h1>
+                    <div className="flex py-4 justify-between">
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => restQuantity(product)}
+                          className="text-white bg-yellow-400 bg-opacity-40 rounded-lg"
+                        >
+                          <MinusIcon />
+                        </button>
+                        <h2 className="text-white">{product.quantity}</h2>
+                        <button
+                          onClick={() => addToCart(product)}
+                          className="text-white bg-yellow-400 bg-opacity-40 rounded-lg"
+                        >
+                          <PlusIcon />
+                        </button>
+                      </div>
+                      <h2 className="text-yellow-600 font-bold ">
+                        ${(product.price * product.quantity).toFixed(2)}
+                      </h2>
                     </div>
-                    <h2>${product.price}</h2>
                   </div>
                 </div>
+                <button
+                  className=" self-center mx-2"
+                  onClick={() => removeFromCart(product)}
+                >
+                  <TrashIcon />
+                </button>
               </div>
-              <h1 className=" self-center mx-2">X</h1>
-            </div>
-          );
-        })}
+            );
+          })
+        ) : (
+          <h1 className="text-center text-lg my-4 text-white">
+            No tiene productos en el carrito
+          </h1>
+        )}
+        <div className="w-3/4 text-center border-t-2 border-t-yellow-400 m-auto">
+          <button className="bg-blue-600 rounded-md text-white text-lg w-40 my-4">
+            Realizar Compra
+          </button>
+        </div>
       </div>
     </div>
   );

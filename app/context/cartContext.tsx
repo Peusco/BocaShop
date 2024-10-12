@@ -7,6 +7,8 @@ interface CartContextType {
   dataCart: Product[];
   addToCart: (product: Product) => void;
   clearCart: () => void;
+  removeFromCart: (product: Product) => void;
+  restQuantity: (product: Product) => void;
 }
 
 const cartContext = createContext<CartContextType | undefined>(undefined);
@@ -29,10 +31,31 @@ export function CartWrapper({ children }: { children: React.ReactNode }) {
     setDataCart((prevState) => [...prevState, product]);
   };
 
-  const clearCart = () => {};
+  const clearCart = () => {
+    setDataCart([]);
+  };
+
+  const removeFromCart = (product: Product) => {
+    return setDataCart((prevState) =>
+      prevState.filter((item) => item.id != product.id)
+    );
+  };
+
+  const restQuantity = (product: Product) => {
+    if (product.quantity == 1) return;
+    const productInCartIndex = dataCart.findIndex(
+      (item) => item.id === product.id
+    );
+    const newCart = structuredClone(dataCart);
+    newCart[productInCartIndex].quantity -= 1;
+    console.log("no deberia pasar por aca");
+    return setDataCart(newCart);
+  };
 
   return (
-    <cartContext.Provider value={{ dataCart, addToCart, clearCart }}>
+    <cartContext.Provider
+      value={{ dataCart, addToCart, clearCart, removeFromCart, restQuantity }}
+    >
       {children}
     </cartContext.Provider>
   );
