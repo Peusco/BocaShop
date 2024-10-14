@@ -1,7 +1,7 @@
 "use server";
 
 import { sql } from "@vercel/postgres";
-import { Product } from "./definitions";
+import { Product, User } from "./definitions";
 
 export async function fetchFirstFourProducts() {
   try {
@@ -55,5 +55,29 @@ export async function fetchFilteredSexoProducts(type: string) {
     return data.rows;
   } catch (error) {
     console.log(error);
+  }
+}
+
+export async function fetchUser(email: string) {
+  try {
+    const data =
+      await sql<User>`SELECT * FROM users where users.email = ${email}`;
+
+    return data.rows;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export async function createUser(
+  name: string,
+  email: string,
+  password: string,
+  rol: string
+) {
+  try {
+    await sql<User>`INSERT INTO users (name,email,password,rol) VALUES(${name},${email},${password}, ${rol})`;
+  } catch (e) {
+    console.log(e);
   }
 }

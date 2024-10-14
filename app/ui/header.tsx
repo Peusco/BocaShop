@@ -12,11 +12,13 @@ import {
   PlusIcon,
 } from "./icons";
 import Link from "next/link";
-import { Suspense, useEffect, useState } from "react";
+import { FormEvent, Suspense, useEffect, useState } from "react";
 import Search from "./Components/search";
 import { usePathname } from "next/navigation";
 import { useCartContext } from "../context/cartContext";
 import { Product } from "../lib/definitions";
+import { signIn, signOut, useSession } from "next-auth/react";
+import UserForm from "./Components/userForm";
 
 export function Header() {
   const pathname = usePathname();
@@ -26,6 +28,8 @@ export function Header() {
     pathname.split("/")[1] == "products" ? true : false
   );
   const [cartIsOpen, setCartIsOpen] = useState(false);
+  const { status } = useSession();
+  const [loginError, setLoginError] = useState(false);
 
   const { dataCart, removeFromCart, restQuantity, addToCart } =
     useCartContext();
@@ -46,6 +50,33 @@ export function Header() {
 
   const handleSearch = () => {
     setSearchIsOpen(!searchIsOpen);
+  };
+
+  const handleSigIn = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (status == "authenticated") {
+      signOut();
+      return;
+    }
+    const formData = new FormData(event.currentTarget);
+    const email = formData.get("email");
+    const contraseña = formData.get("contraseña");
+    try {
+      const res = await signIn("credentials", {
+        email: email,
+        contraseña: contraseña,
+        redirect: false,
+      });
+
+      if (!res?.error) {
+        console.log("Succes");
+      } else {
+        setLoginError(true);
+      }
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   useEffect(() => {
@@ -138,36 +169,12 @@ export function Header() {
         </div>
       </div>
 
-      <div
-        className={`${
-          loginIsOpen ? "block" : "hidden"
-        } absolute bg-slate-200 rounded-md w-52 h-64 right-0 top-40 md:top-20`}
-      >
-        <div className="flex justify-between mx-4 my-1">
-          <h1 className="text-lg font-medium">Iniciar Sesion</h1>
-          <div onClick={handleIniciarSesion}>
-            <CrossIcon />
-          </div>
-        </div>
-        <form className="text-center py-4 ">
-          <label htmlFor="email" className="text-lg  font-medium text-zinc-600">
-            Mail
-          </label>
-          <input type="text" name="email" className="my-2 bg-slate-400" />
-          <label
-            htmlFor="contraseña"
-            className="text-lg text-zinc-600 font-medium"
-          >
-            Contraseña
-          </label>
-          <input type="text" name="contraseña" className="bg-slate-400 my-2" />
-        </form>
-        <div className="text-center border-t-2 border-white">
-          <button className="bg-yellow-300 rounded-md w-20 h-7 my-2">
-            Ingresar
-          </button>
-        </div>
-      </div>
+      <UserForm
+        loginIsOpen={loginIsOpen}
+        handleIniciarSesion={handleIniciarSesion}
+        handleSigIn={handleSigIn}
+        loginError={loginError}
+      />
 
       <div
         className={`${cartIsOpen ? "block" : "hidden"} ${
