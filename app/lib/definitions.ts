@@ -13,6 +13,7 @@ export type Product = {
 export type User = {
   id: string;
   name: string;
+  password: string;
   email: string;
   rol: "admin" | "user";
   products_id: string[];

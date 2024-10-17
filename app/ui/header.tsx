@@ -19,6 +19,7 @@ import { useCartContext } from "../context/cartContext";
 import { Product } from "../lib/definitions";
 import { signIn, signOut, useSession } from "next-auth/react";
 import UserForm from "./Components/userForm";
+import { addProductToUser, fetchUser } from "../lib/data";
 
 export function Header() {
   const pathname = usePathname();
@@ -28,14 +29,13 @@ export function Header() {
     pathname.split("/")[1] == "products" ? true : false
   );
   const [cartIsOpen, setCartIsOpen] = useState(false);
-  const { status } = useSession();
+  const { data: session, status } = useSession();
   const [loginError, setLoginError] = useState(false);
 
   const { dataCart, removeFromCart, restQuantity, addToCart } =
     useCartContext();
 
   const handleCart = () => {
-    console.log("hola");
     setCartIsOpen(!cartIsOpen);
   };
 
@@ -76,6 +76,26 @@ export function Header() {
       }
     } catch (e) {
       console.log(e);
+    }
+  };
+
+  const buyProducts = async () => {
+    try {
+      if (status == "authenticated") {
+        const email = session.user?.email;
+        if (email) {
+          const user = await fetchUser(email);
+          if (user)
+            dataCart.map(async (p) => await addProductToUser(user[0].id, p.id));
+        } else {
+          console.log("Error fetch user");
+          return;
+        }
+      } else {
+        return;
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -242,7 +262,10 @@ export function Header() {
           </h1>
         )}
         <div className="w-3/4 text-center border-t-2 border-t-yellow-400 m-auto">
-          <button className="bg-blue-600 rounded-md text-white text-lg w-40 my-4">
+          <button
+            className="bg-blue-600 rounded-md text-white text-lg w-40 my-4"
+            onClick={buyProducts}
+          >
             Realizar Compra
           </button>
         </div>

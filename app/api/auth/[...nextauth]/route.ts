@@ -1,6 +1,7 @@
 import { fetchUser } from "@/app/lib/data";
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import bcrypt from "bcrypt";
 
 const authOptions = {
   providers: [
@@ -12,16 +13,17 @@ const authOptions = {
           type: "password",
           placeholder: "******",
         },
+        id: { label: "id", type: "text" },
       },
       authorize: async (credentials) => {
         try {
           if (credentials) {
-            const { email } = credentials;
+            const { email, contraseña } = credentials;
             const data = await fetchUser(email as string);
             if (data) {
               const dataUser = data[0];
-
-              return dataUser;
+              if (bcrypt.compareSync(contraseña, dataUser.password))
+                return dataUser;
             }
             return null;
           }

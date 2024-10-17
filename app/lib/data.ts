@@ -2,6 +2,7 @@
 
 import { sql } from "@vercel/postgres";
 import { Product, User } from "./definitions";
+import bcrypt from "bcrypt";
 
 export async function fetchFirstFourProducts() {
   try {
@@ -76,7 +77,17 @@ export async function createUser(
   rol: string
 ) {
   try {
-    await sql<User>`INSERT INTO users (name,email,password,rol) VALUES(${name},${email},${password}, ${rol})`;
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await sql<User>`INSERT INTO users (name,email,password,rol) VALUES(${name},${email},${hashedPassword}, ${rol})`;
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export async function addProductToUser(userId: string, productId: string) {
+  try {
+    await sql<User>`INSERT INTO user_products (user_id,product_id) VALUES(${userId},${productId})`;
   } catch (e) {
     console.log(e);
   }

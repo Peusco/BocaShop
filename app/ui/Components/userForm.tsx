@@ -20,14 +20,32 @@ export default function UserForm({
 }: Props) {
   const { data: session, status } = useSession();
   const [registrarseIsOpen, setRegistrarseIsOpen] = useState(false);
+  const [mail, setMail] = useState("");
+  const [contraseña, setContraseña] = useState("");
+
+  const handleBack = () => {
+    setRegistrarseIsOpen(false);
+    setMail("");
+    setContraseña("");
+  };
 
   const handleRegistrarse = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email") as string;
     const password = formData.get("contraseña") as string;
+    const name = formData.get("Nombre") as string;
 
-    await createUser("ivan", email, password, "user");
+    if (email != "" && password != "" && name != "") {
+      try {
+        await createUser(name, email, password, "user");
+        setRegistrarseIsOpen(false);
+        setContraseña("");
+        setMail("");
+      } catch (e) {
+        console.log(e);
+      }
+    }
   };
 
   return (
@@ -43,7 +61,7 @@ export default function UserForm({
               {registrarseIsOpen ? "Registrarse" : "Iniciar Sesion"}
             </h1>
             {registrarseIsOpen ? (
-              <div onClick={() => setRegistrarseIsOpen(false)}>
+              <div onClick={handleBack}>
                 <ArrowLeft />
               </div>
             ) : (
@@ -66,6 +84,8 @@ export default function UserForm({
               id="email"
               type="text"
               name="email"
+              value={mail}
+              onChange={(e) => setMail(e.target.value)}
               className={`my-2 bg-slate-400 ${
                 loginError ? "border-2 border-red-600" : ""
               }`}
@@ -80,10 +100,32 @@ export default function UserForm({
               id="contraseña"
               type="password"
               name="contraseña"
+              value={contraseña}
+              onChange={(e) => setContraseña(e.target.value)}
               className={`${
                 loginError ? "border-2 border-red-600" : ""
               } bg-slate-400 my-2`}
             />
+            {registrarseIsOpen ? (
+              <div>
+                <label
+                  htmlFor="Nombre"
+                  className="text-lg text-zinc-600 font-medium"
+                >
+                  Nombre
+                </label>
+                <input
+                  id="Nombre"
+                  type="text"
+                  name="Nombre"
+                  className={`${
+                    loginError ? "border-2 border-red-600" : ""
+                  } bg-slate-400 my-2`}
+                />
+              </div>
+            ) : (
+              ""
+            )}
             <h2 className="text-red-600 font-semibold">
               {loginError ? "Email o Contraseña incorrecto" : ""}
             </h2>
