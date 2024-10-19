@@ -31,6 +31,7 @@ export function Header() {
   const [cartIsOpen, setCartIsOpen] = useState(false);
   const { data: session, status } = useSession();
   const [loginError, setLoginError] = useState(false);
+  const [buyError, setBuyError] = useState(false);
 
   const { dataCart, removeFromCart, restQuantity, addToCart } =
     useCartContext();
@@ -62,6 +63,7 @@ export function Header() {
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email");
     const contraseña = formData.get("contraseña");
+    if (email == "" || contraseña == "") return;
     try {
       const res = await signIn("credentials", {
         email: email,
@@ -82,6 +84,7 @@ export function Header() {
   const buyProducts = async () => {
     try {
       if (status == "authenticated") {
+        setBuyError(false);
         const email = session.user?.email;
         if (email) {
           const user = await fetchUser(email);
@@ -92,6 +95,7 @@ export function Header() {
           return;
         }
       } else {
+        setBuyError(true);
         return;
       }
     } catch (error) {
@@ -194,6 +198,7 @@ export function Header() {
         handleIniciarSesion={handleIniciarSesion}
         handleSigIn={handleSigIn}
         loginError={loginError}
+        cartIsOpen={cartIsOpen}
       />
 
       <div
@@ -213,8 +218,8 @@ export function Header() {
                 key={product.id}
                 className="flex py-2  border-t-2 border-t-yellow-400 my-1"
               >
-                <div className="flex w-full justify-around ">
-                  <div className="w-1/3 h-full">
+                <div className="flex w-full justify-around gap-2">
+                  <div className="w-1/3 h-full ps-2">
                     <Image
                       src={product.img[0]}
                       width={80}
@@ -261,13 +266,20 @@ export function Header() {
             No tiene productos en el carrito
           </h1>
         )}
-        <div className="w-3/4 text-center border-t-2 border-t-yellow-400 m-auto">
+        <div className="w-3/4 text-center border-t-2 border-t-yellow-400 m-auto flex-col flex justify-center items-center">
           <button
             className="bg-blue-600 rounded-md text-white text-lg w-40 my-4"
             onClick={buyProducts}
           >
             Realizar Compra
           </button>
+          {buyError && dataCart.length > 0 ? (
+            <h1 className="text-red-600 pb-4 text-base font-medium ">
+              Inicia sesion para realizar la compra
+            </h1>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     </div>

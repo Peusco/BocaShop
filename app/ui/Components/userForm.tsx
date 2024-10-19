@@ -3,13 +3,14 @@
 import { useSession } from "next-auth/react";
 import { ArrowLeft, CrossIcon } from "../icons";
 import { FormEvent, useState } from "react";
-import { createUser } from "@/app/lib/data";
+import { changePassword, createUser } from "@/app/lib/data";
 
 interface Props {
   loginIsOpen: boolean;
   handleIniciarSesion: () => void;
   handleSigIn: (event: FormEvent<HTMLFormElement>) => Promise<void>;
   loginError: boolean;
+  cartIsOpen: boolean;
 }
 
 export default function UserForm({
@@ -17,14 +18,17 @@ export default function UserForm({
   handleIniciarSesion,
   handleSigIn,
   loginError,
+  cartIsOpen,
 }: Props) {
   const { data: session, status } = useSession();
   const [registrarseIsOpen, setRegistrarseIsOpen] = useState(false);
   const [mail, setMail] = useState("");
   const [contraseña, setContraseña] = useState("");
+  const [cambiarContraseña, setCambiarContraseña] = useState(false);
 
   const handleBack = () => {
     setRegistrarseIsOpen(false);
+    setCambiarContraseña(false);
     setMail("");
     setContraseña("");
   };
@@ -48,11 +52,20 @@ export default function UserForm({
     }
   };
 
+  const handleChangePassword = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setCambiarContraseña(true);
+    changePassword(mail, contraseña);
+    setCambiarContraseña(false);
+    setMail("");
+    setContraseña("");
+  };
+
   return (
     <div
       className={`${
-        loginIsOpen ? "block" : "hidden"
-      } absolute bg-slate-200 rounded-md w-52 h-auto right-0 top-40 md:top-20`}
+        loginIsOpen && !cartIsOpen ? "block" : "hidden"
+      } absolute bg-slate-200 rounded-md w-52 h-auto right-0 top-40 md:top-20 `}
     >
       {status == "unauthenticated" ? (
         <div>
@@ -60,7 +73,7 @@ export default function UserForm({
             <h1 className="text-lg font-medium">
               {registrarseIsOpen ? "Registrarse" : "Iniciar Sesion"}
             </h1>
-            {registrarseIsOpen ? (
+            {registrarseIsOpen || cambiarContraseña ? (
               <div onClick={handleBack}>
                 <ArrowLeft />
               </div>
@@ -72,7 +85,13 @@ export default function UserForm({
           </div>
           <form
             className="text-center py-4 "
-            onSubmit={registrarseIsOpen ? handleRegistrarse : handleSigIn}
+            onSubmit={
+              registrarseIsOpen
+                ? handleRegistrarse
+                : cambiarContraseña
+                ? handleChangePassword
+                : handleSigIn
+            }
           >
             <label
               htmlFor="email"
@@ -94,7 +113,7 @@ export default function UserForm({
               htmlFor="contraseña"
               className="text-lg text-zinc-600 font-medium"
             >
-              Contraseña
+              {cambiarContraseña ? "Nueva Contraseña" : "Contraseña"}
             </label>
             <input
               id="contraseña"
@@ -132,9 +151,14 @@ export default function UserForm({
             {registrarseIsOpen ? (
               ""
             ) : (
-              <button onClick={() => setRegistrarseIsOpen(true)}>
-                Registrarse
-              </button>
+              <div>
+                <button onClick={() => setRegistrarseIsOpen(true)}>
+                  Registrarse
+                </button>
+                <button onClick={() => setCambiarContraseña(true)}>
+                  Olvide mi contraseña
+                </button>
+              </div>
             )}
             <div className="text-center border-t-2 border-white">
               <button

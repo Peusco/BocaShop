@@ -85,6 +85,16 @@ export async function createUser(
   }
 }
 
+export async function changePassword(emai: string, newPassword: string) {
+  try {
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await sql`UPDATE users SET password = ${hashedPassword} WHERE users.email = ${emai}`;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 export async function addProductToUser(userId: string, productId: string) {
   try {
     await sql<User>`INSERT INTO user_products (user_id,product_id) VALUES(${userId},${productId})`;
