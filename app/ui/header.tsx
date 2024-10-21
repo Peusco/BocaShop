@@ -16,7 +16,6 @@ import { FormEvent, Suspense, useEffect, useState } from "react";
 import Search from "./Components/search";
 import { usePathname } from "next/navigation";
 import { useCartContext } from "../context/cartContext";
-import { Product } from "../lib/definitions";
 import { signIn, signOut, useSession } from "next-auth/react";
 import UserForm from "./Components/userForm";
 import { addProductToUser, fetchUser } from "../lib/data";
@@ -89,7 +88,9 @@ export function Header() {
         if (email) {
           const user = await fetchUser(email);
           if (user)
-            dataCart.map(async (p) => await addProductToUser(user[0].id, p.id));
+            dataCart.map(
+              async (p) => await addProductToUser(user[0].id, p.data.id)
+            );
         } else {
           console.log("Error fetch user");
           return;
@@ -212,49 +213,57 @@ export function Header() {
           <CrossIcon />
         </div>
         {dataCart.length > 0 ? (
-          dataCart.map((product: Product) => {
+          dataCart.map((product, index) => {
             return (
               <div
-                key={product.id}
+                key={index}
                 className="flex py-2  border-t-2 border-t-yellow-400 my-1"
               >
                 <div className="flex w-full justify-around gap-2">
                   <div className="w-1/3 h-full ps-2">
                     <Image
-                      src={product.img[0]}
+                      src={product.data.img[0]}
                       width={80}
                       height={80}
                       alt="camistea de boca"
                       className="m-auto py-4"
                     />
+                    <h2 className="text-white text-center">
+                      Talle: {product.size}
+                    </h2>
                   </div>
                   <div className="flex-col">
-                    <h1 className="text-white font-medium">{product.name}</h1>
+                    <h1 className="text-white font-medium">
+                      {product.data.name}
+                    </h1>
                     <div className="flex py-4 justify-between">
                       <div className="flex gap-2">
                         <button
-                          onClick={() => restQuantity(product)}
+                          onClick={() => restQuantity(product.data)}
                           className="text-white bg-yellow-400 bg-opacity-40 rounded-lg"
                         >
                           <MinusIcon />
                         </button>
-                        <h2 className="text-white">{product.quantity}</h2>
+                        <h2 className="text-white">{product.data.quantity}</h2>
                         <button
-                          onClick={() => addToCart(product)}
+                          onClick={() => addToCart(product.data, product.size)}
                           className="text-white bg-yellow-400 bg-opacity-40 rounded-lg"
                         >
                           <PlusIcon />
                         </button>
                       </div>
                       <h2 className="text-yellow-600 font-bold ">
-                        ${(product.price * product.quantity).toFixed(2)}
+                        $
+                        {(product.data.price * product.data.quantity).toFixed(
+                          2
+                        )}
                       </h2>
                     </div>
                   </div>
                 </div>
                 <button
                   className=" self-center mx-2"
-                  onClick={() => removeFromCart(product)}
+                  onClick={() => removeFromCart(product.data, product.size)}
                 >
                   <TrashIcon />
                 </button>
