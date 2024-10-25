@@ -28,8 +28,8 @@ export const Card: React.FC<Props> = ({ product }) => {
   };
 
   return (
-    <div className=" group flex-col h-1/2  w-1/2 p-1.5  hover:border-2 border-blue-800 mx-auto md:flex  md:justify-between md:w-2/5  ">
-      <div className="w-full   ">
+    <div className=" group flex-col flex justify-evenly h-[300px]  w-full p-1.5 left-0  snap-center  hover:border-2 border-blue-800 mx-auto md:min-w-80 md:min-h-full md:h-[300px]  ">
+      <div className="w-full flex  ">
         <Image
           src={src[0]}
           width={250}
@@ -41,15 +41,17 @@ export const Card: React.FC<Props> = ({ product }) => {
           }}
         />
 
-        <ol className=" gap-2  h-8 font-semibold  justify-center hidden group-hover:flex">
+        <ol className="hidden gap-2  font-semibold  justify-evenly   flex-col md:flex h-full ">
           {size.map((s, index) => {
             return (
               <li
                 className={`border-2 border-blue-900 min-w-10 text-center rounded-md hover:bg-blue-500 ${
-                  focusSize == s ? "bg-blue-500" : ""
+                  focusSize == s ? "bg-blue-800" : ""
                 } cursor-pointer`}
                 key={index}
-                onClick={() => setFocusSize(s)}
+                onClick={() =>
+                  s === focusSize ? setFocusSize("") : setFocusSize(s)
+                }
               >
                 {s}
               </li>
@@ -64,10 +66,16 @@ export const Card: React.FC<Props> = ({ product }) => {
       </h2>
       <div className=" text-center">
         <button
-          className="bg-blue-600 w-32 rounded-xl text-white md:text-2xl"
+          className="bg-blue-600 w-32 rounded-xl text-white md:text-2xl hidden md:block m-auto"
           onClick={() => addProduct(product)}
         >
           Comprar
+        </button>
+        <button
+          className="bg-blue-600 w-32 rounded-xl text-white md:text-2xl md:hidden"
+          onClick={() => handleClick(product)}
+        >
+          Ver Producto
         </button>
       </div>
     </div>

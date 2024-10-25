@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 
 export async function fetchFirstFourProducts() {
   try {
-    const data = await sql<Product>`SELECT * From products LIMIT 4`;
+    const data = await sql<Product>`SELECT * From products LIMIT 10`;
 
     return data.rows;
   } catch (error) {
